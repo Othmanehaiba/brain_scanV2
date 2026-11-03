@@ -1,0 +1,9 @@
+names:
+  0: glioma
+  1: meningioma
+  2: notumor
+  3: pituitary
+path: C:\Projects\Brain_Scan_V2\data\processed\detection
+test: images/test
+train: images/train
+val: images/val
