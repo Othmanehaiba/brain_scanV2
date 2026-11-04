@@ -1,8 +1,12 @@
+import os
 import streamlit as st
 import requests
 from PIL import Image
 import io
 import base64
+
+# Récupère l'URL de l'API depuis la variable d'environnement ou utilise 127.0.0.1 par défaut
+API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
 
 st.set_page_config(page_title="Brain Tumor AI Diagnostics", layout="wide")
 st.title("🧠 Automated Brain Tumor Analysis Solution")
@@ -24,16 +28,24 @@ if uploaded_file is not None:
         if st.button("Run Analysis"):
             files = {"file": (uploaded_file.name, image_bytes, uploaded_file.type)}
 
-            if "Classification" in task:
-                res = requests.post("http://localhost:8000/predict/classify", files=files)
-                if res.status_code == 200:
-                    data = res.json()
-                    st.success(f"Predicted Class: **{data['class']}** ({data['confidence']}%)")
-                    st.json(data["probabilities"])
-            else:
-                res = requests.post("http://localhost:8000/predict/detect", files=files)
-                if res.status_code == 200:
-                    data = res.json()
-                    st.success(f"Found {len(data['detections'])} tumor region(s)")
-                    img_data = base64.b64decode(data["annotated_image_base64"])
-                    st.image(Image.open(io.BytesIO(img_data)), use_column_width=True)
+            try:
+                if "Classification" in task:
+                    res = requests.post(f"{API_URL}/predict/classify", files=files, timeout=30)
+                    if res.status_code == 200:
+                        data = res.json()
+                        st.success(f"Predicted Class: **{data['class']}** ({data['confidence']}%)")
+                        st.json(data["probabilities"])
+                    else:
+                        st.error(f"API Error: {res.status_code}")
+                else:
+                    res = requests.post(f"{API_URL}/predict/detect", files=files, timeout=30)
+                    if res.status_code == 200:
+                        data = res.json()
+                        st.success(f"Found {len(data['detections'])} tumor region(s)")
+                        img_data = base64.b64decode(data["annotated_image_base64"])
+                        st.image(Image.open(io.BytesIO(img_data)), use_column_width=True)
+                    else:
+                        st.error(f"API Error: {res.status_code}")
+
+            except requests.exceptions.ConnectionError:
+                st.error(f"❌ Could not connect to API server at {API_URL}. Check if backend service is running.")

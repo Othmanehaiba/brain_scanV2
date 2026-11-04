@@ -4,7 +4,6 @@ from tensorflow.keras.applications import InceptionV3
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout
 from tensorflow.keras.optimizers import Adam
-from ultralytics import YOLO
 
 # Emplacements des données extraites
 DATASET_DIR = "processed/classification" # ou "data/raw/classification"
@@ -63,16 +62,3 @@ model_path = "models/classification/inceptionv3_brain_tumor.keras"
 model.save(model_path)
 print(f"Modèle de classification sauvegardé dans {model_path}")
 
-
-model = YOLO('yolov8n.pt')
-
-results = model.train(
-    data='config/data.yaml',
-    epochs=30,
-    imgsz=640,
-    batch=8,         # Réduit de 16 à 8 pour économiser la RAM/VRAM
-    workers=2,       # Limite l'utilisation des threads CPU
-    project='runs/detect',
-    name='yolov8_brain_tumor'
-)
-print("Entraînement de YOLOv8 terminé !")

@@ -1,3 +1,77 @@
-/.venv312
-/data
-/models
+# ==========================================
+# Environments & Virtual Envs
+# ==========================================
+.venv/
+.venv312/
+venv/
+env/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# ==========================================
+# Python Cache & Compiled Files
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ==========================================
+# Heavy Datasets & Processed Files
+# ==========================================
+# Ne jamais pousser les images volumineuses ou les zips sur Git
+data/raw/
+data/processed/
+*.zip
+*.tar.gz
+*.7z
+
+# ==========================================
+# Model Weights & Artifacts
+# ==========================================
+# Exclure les poids lourds (.keras, .pt, .pth, .h5)
+models/classification/*.keras
+models/classification/*.h5
+models/detection/*.pt
+*.onnx
+
+# Exception : Conserver la structure des dossiers avec un fichier .gitkeep
+!models/classification/.gitkeep
+!models/detection/.gitkeep
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# ==========================================
+# MLflow & Training Runs / Logs
+# ==========================================
+mlruns/
+runs/
+.mlflow/
+*.log
+
+# ==========================================
+# Apache Airflow Local Files
+# ==========================================
+airflow.db
+airflow.cfg
+airflow-webserver.pid
+logs/
+
+# ==========================================
+# IDEs & System Files (Windows / VS Code)
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# ==========================================
+# Environment Variables & Secrets
+# ==========================================
+.env
+.env.local
